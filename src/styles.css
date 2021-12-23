@@ -1,0 +1,37 @@
+.App {
+  font-family: sans-serif;
+}
+
+.timeLine {
+  display: grid;
+  gap: 2px;
+}
+
+.line {
+  background-color: rgb(55, 169, 214);
+  padding: 0.5em;
+  padding-right: 0.5em;
+  min-height: 1em;
+  border-radius: 0.2em;
+  color: white;
+  position: relative;
+  left: 0;
+}
+
+.track {
+  position: relative;
+}
+
+.keyFrame {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#properties-pane .properties {
+  white-space: pre;
+}
