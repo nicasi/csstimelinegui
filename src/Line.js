@@ -39,7 +39,7 @@ const Line = (props) => {
   };
 
   const onPositionChangeHandler = (id, position) => {
-    props.onKeyFramePositionChange(id, position);
+    props.onKeyFramePositionChange(props.id, id, position);
   };
 
   return (
@@ -54,10 +54,8 @@ const Line = (props) => {
     >
       <div className="track">
         {props.keyframes.map((keyframe) => {
-          console.log(keyframe.key);
           return (
             <KeyFrame
-              key={keyframe.key}
               id={keyframe.key}
               position={keyframe.position}
               cssProps={keyframe.css}

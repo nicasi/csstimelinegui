@@ -3,11 +3,12 @@ import "./styles.css";
 import Line from "./Line";
 
 export default function App() {
-  const [cssPropsPaneText, setCssPropsPaneText] = useState("...");
+  const [cssPropsPaneText, setCssPropsPaneText] = useState('...');
 
   let animations = [
     {
-      id: 0,
+      key: 0,
+      selector: '#el1',
       duration: 500,
       delay: 100,
       keyframes: [
@@ -29,7 +30,8 @@ export default function App() {
       ]
     },
     {
-      id: 1,
+      key: 1,
+      selector: '#el2',
       duration: 300,
       delay: 0,
       keyframes: [
@@ -47,6 +49,17 @@ export default function App() {
     }
   ];
 
+  
+
+  const generateAnimationsCss = () => {
+    return animations
+      .map(animation => animation.selector + `{animation: a-${animation.key} ${animation.duration}ms ${animation.delay}ms}`)
+      .join();
+  }
+
+  const [generatedStyles, setGeneratedStyles] = useState(generateAnimationsCss());
+  
+
   const formatCss = (str) => {
     let arr = str.split(";");
     return arr.join(";\r\n");
@@ -56,19 +69,10 @@ export default function App() {
     setCssPropsPaneText(cssProps);
   };
 
-  const keyFramePositionChangeHandler = (id, position) => {
-    console.log('in app: ' + position + ' ' + id);
+  const keyFramePositionChangeHandler = (id, kfid, position) => {
+    console.log('in app: ' + position + ' ' + kfid + ' ' + id);
+    setGeneratedStyles(generateAnimationsCss());
   };
-
-  /*
-        .map((anObjectMapped, index) => {
-    return (
-        <p key={`${anObjectMapped.name}_{anObjectMapped.email}`}>
-            {anObjectMapped.name} - {anObjectMapped.email}
-        </p>
-    );
-})
-        */
 
   return (
     <div className="App">
@@ -76,7 +80,7 @@ export default function App() {
         {animations.map((animation) => {
           return (
             <Line
-              key={animation.id}
+              id={animation.key}
               onKeyFrameSelect={keyFrameSelectHandler}
               onKeyFramePositionChange={keyFramePositionChangeHandler}
               duration={animation.duration}
@@ -92,6 +96,7 @@ export default function App() {
           {formatCss(cssPropsPaneText)}
         </div>
       </div>
+      <style>{generatedStyles}</style>
     </div>
   );
 }
