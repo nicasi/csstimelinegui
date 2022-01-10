@@ -3,27 +3,27 @@ import "./styles.css";
 import Line from "./Line";
 
 export default function App() {
-  const [cssPropsPaneText, setCssPropsPaneText] = useState('...');
+  const [cssPropsPaneText, setCssPropsPaneText] = useState("...");
 
   let animations = [
     {
       key: 0,
-      selector: '#el1',
+      selector: "#el1",
       duration: 500,
       delay: 100,
       keyframes: [
         {
-          key: '0.0',
+          key: "0.0",
           position: 0,
           css: `background-color:red;transform:rotate(0deg)`
         },
         {
-          key: '0.1',
+          key: "0.1",
           position: 50,
           css: `background-color: green`
         },
         {
-          key: '0.2',
+          key: "0.2",
           position: 100,
           css: `background-color: blue;transform: rotate(100deg)`
         }
@@ -31,17 +31,17 @@ export default function App() {
     },
     {
       key: 1,
-      selector: '#el2',
+      selector: "#el2",
       duration: 300,
       delay: 0,
       keyframes: [
         {
-          key: '1.0',
+          key: "1.0",
           position: 0,
           css: `background-color:pink;transform:scale(0)`
         },
         {
-          key: '1.1',
+          key: "1.1",
           position: 10,
           css: `background-color: orange;transform: scale(1)`
         }
@@ -49,16 +49,38 @@ export default function App() {
     }
   ];
 
-  
-
-  const generateAnimationsCss = () => {
+  const generateAnimationCss = () => {
     return animations
-      .map(animation => animation.selector + `{animation: a-${animation.key} ${animation.duration}ms ${animation.delay}ms}`)
+      .map(
+        (animation) =>
+          animation.selector +
+          `{animation: a-${animation.key} ${animation.duration}ms ${animation.delay}ms}`
+      )
       .join();
-  }
+  };
 
-  const [generatedStyles, setGeneratedStyles] = useState(generateAnimationsCss());
-  
+  const [generatedAnimationCss, setGeneratedAnimationCss] = useState(
+    generateAnimationCss()
+  );
+
+  const generateKeyframesCss = () => {
+    return animations.map((animation) => {
+      let s = `@keyframes a-${animation.key} {`;
+      s += animation.keyframes
+        .map(
+          (kf) => `${kf.position}% {
+                        ${kf.css}
+                      }`
+        )
+        .join();
+      s += "}";
+      return s;
+    });
+  };
+
+  const [generatedKeyframesCss, setGeneratedKeyframesCss] = useState(
+    generateKeyframesCss()
+  );
 
   const formatCss = (str) => {
     let arr = str.split(";");
@@ -70,8 +92,8 @@ export default function App() {
   };
 
   const keyFramePositionChangeHandler = (id, kfid, position) => {
-    console.log('in app: ' + position + ' ' + kfid + ' ' + id);
-    setGeneratedStyles(generateAnimationsCss());
+    setGeneratedAnimationCss(generateAnimationCss());
+    setGeneratedKeyframesCss(generateKeyframesCss());
   };
 
   return (
@@ -96,7 +118,8 @@ export default function App() {
           {formatCss(cssPropsPaneText)}
         </div>
       </div>
-      <style>{generatedStyles}</style>
+      <style>{generatedAnimationCss}</style>
+      <style>{generatedKeyframesCss}</style>
     </div>
   );
 }
