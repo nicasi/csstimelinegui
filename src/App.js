@@ -4,6 +4,7 @@ import Line from "./Line";
 
 export default function App() {
   const [cssPropsPaneText, setCssPropsPaneText] = useState("...");
+  const [sceneContent, setSceneContent] = useState(<div id="el1">element</div>);
 
   let animations = [
     {
@@ -92,13 +93,22 @@ export default function App() {
   };
 
   const keyFramePositionChangeHandler = (id, kfid, position) => {
+    let aniToChange = animations.find((ani) => ani.key === id);
+    let keyFrameToChange = aniToChange.keyframes.find((kf) => kf.key === kfid);
+    keyFrameToChange.position = position;
     setGeneratedAnimationCss(generateAnimationCss());
     setGeneratedKeyframesCss(generateKeyframesCss());
+    setSceneContent(
+      <div key={Math.random()} id="el1">
+        element
+      </div>
+    );
   };
 
   return (
     <div className="App">
-      <div className="timeLine">
+      <div id="scene">{sceneContent}</div>
+      <div id="timeLine">
         {animations.map((animation) => {
           return (
             <Line

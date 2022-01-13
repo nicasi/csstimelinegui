@@ -1,18 +1,15 @@
-#root {
+#timeLine {
   position: fixed;
-  bottom: 0;
+  bottom: 10px;
   left: 0;
   right: 0;
   border-top: 2px solid black;
+  display: grid;
+  gap: 2px;
 }
 
 .App {
   font-family: sans-serif;
-}
-
-.timeLine {
-  display: grid;
-  gap: 2px;
 }
 
 .line {
