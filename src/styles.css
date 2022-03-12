@@ -42,10 +42,7 @@
   font-family: consolas, monospace;
 }
 
-/*
-@keyframes a-0 {
-  100% {
-    margin-left: 500px;
-  }
+#el1, #el2 {
+  width: 100px;
+  height: 100px;
 }
-*/

@@ -38,8 +38,8 @@ const Line = (props) => {
     props.onKeyFrameSelect(cssProps);
   };
 
-  const onPositionChangeHandler = (id, position) => {
-    props.onKeyFramePositionChange(props.id, id, position);
+  const onPositionChangeHandler = (id, offset) => {
+    props.onKeyFramePositionChange(props.id, id, offset);
   };
 
   return (
@@ -56,8 +56,9 @@ const Line = (props) => {
         {props.keyframes.map((keyframe) => {
           return (
             <KeyFrame
+              key={keyframe.key}
               id={keyframe.key}
-              position={keyframe.position}
+              offset={keyframe.offset}
               cssProps={keyframe.css}
               parentWidth={width}
               onKeyFrameSelect={onKeyFrameSelectHandler}

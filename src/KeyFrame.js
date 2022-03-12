@@ -1,16 +1,15 @@
 import React, { useState } from "react";
 
 const KeyFrame = (props) => {
+
   const calcOffset = (x) => {
     return (x / 100) * -16;
   };
 
-  const [Left, setLeft] = useState(props.position);
-  const [OffsetLeft, setOffsetLeft] = useState(calcOffset(props.position));
-  const [LeftStart, setLeftStart] = useState(props.position);
+  const [Left, setLeft] = useState(props.offset*100);
+  const [OffsetLeft, setOffsetLeft] = useState(calcOffset(props.offset*100));
+  const [LeftStart, setLeftStart] = useState(props.offset*100);
   const [MouseXStart, setMouseXStart] = useState(0);
-  //const [PropertiesStr, setPropertiesStr] = useState("");
-  console.log("KeyFrame init");
 
   const dragHandler = (e) => {
     //e.preventDefault();
@@ -43,7 +42,7 @@ const KeyFrame = (props) => {
 
   const dragStopHandler = (e) => {
     setLeftStart(Left);
-    props.onPositionChange(props.id, Left);
+    props.onPositionChange(props.id, Left/100);
     console.log(props.id);
   };
 

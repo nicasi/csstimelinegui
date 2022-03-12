@@ -4,14 +4,7 @@ import Line from "./Line";
 
 export default function App() {
   const [cssPropsPaneText, setCssPropsPaneText] = useState("...");
-  const [sceneContent, setSceneContent] = useState(<div id="el1">element</div>);
 
-  useEffect(() => {
-    // Update the document title using the browser API
-    console.log(document.getElementById('el1'));
-  });
-
-  console.log(document.getElementById('el1'));
   let animations = [
     {
       key: 0,
@@ -28,13 +21,14 @@ export default function App() {
         {
           key: "0.1",
           offset: 0.5,
-          backgroundColor:'green'
+          backgroundColor:'green',
+          transform:'rotate(180deg)'
         },
         {
           key: "0.2",
           offset: 1,
           backgroundColor: 'blue',
-          transform: 'rotate(100deg)'
+          transform: 'rotate(360deg)'
         }
       ]
     },
@@ -46,13 +40,13 @@ export default function App() {
       keyframes: [
         {
           key: "1.0",
-          position: 0,
+          offset: 0,
           backgroundColor: 'pink',
           transform: 'scale(0)'
         },
         {
           key: "1.1",
-          position: 0.1,
+          offset: 1,
           backgroundColor: 'orange',
           transform: 'scale(1)'
         }
@@ -60,52 +54,42 @@ export default function App() {
     }
   ];
 
-  const generateAnimationCss = () => {
-    return animations
-      .map(
-        (animation) =>
-          animation.selector +
-          `{animation: a-${animation.key} ${animation.duration}ms ${animation.delay}ms}`
-      )
-      .join();
-  };
-
-  const KeyframesArr = () => {
-    return animations.map((animation) => {
-      animation.keyframes
-    });
-  };
-
-
   const formatCss = (str) => {
     let arr = str.split(";");
     return arr.join(";\r\n");
   };
 
   const keyFrameSelectHandler = (cssProps) => {
+    console.log(cssProps);
     setCssPropsPaneText(cssProps);
   };
 
-  const keyFramePositionChangeHandler = (id, kfid, position) => {
+  const keyFramePositionChangeHandler = (id, kfid, offset) => {
     let aniToChange = animations.find((ani) => ani.key === id);
     let keyFrameToChange = aniToChange.keyframes.find((kf) => kf.key === kfid);
-    keyFrameToChange.position = position;
-    KeyframesArr();
-    //setGeneratedKeyframesCss(generateKeyframesCss());
-    setSceneContent(
-      <div key={Math.random()} id="el1">
-        element
-      </div>
-    );
+    keyFrameToChange.offset = offset;
+
+    animations.forEach(a => {
+      
+      if(document.querySelector(a.selector)) {
+        console.log(a.keyframes);
+        document
+          .querySelector(a.selector)
+          .animate(a.keyframes, {duration: 2000, iterations: Infinity})
+      }
+      
+    })
   };
 
   return (
     <div className="App">
-      <div id="scene">{sceneContent}</div>
+      <div id="scene"></div>
       <div id="timeLine">
         {animations.map((animation) => {
+          //console.log(animation);
           return (
             <Line
+              key={animation.key}
               id={animation.key}
               onKeyFrameSelect={keyFrameSelectHandler}
               onKeyFramePositionChange={keyFramePositionChangeHandler}
@@ -119,7 +103,7 @@ export default function App() {
       <div id="properties-pane">
         <h2>PROPERTIES</h2>
         <div contentEditable className="properties">
-          {formatCss(cssPropsPaneText)}
+          {cssPropsPaneText}
         </div>
       </div>
     </div>
