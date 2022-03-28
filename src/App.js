@@ -72,10 +72,9 @@ export default function App() {
     animations.forEach(a => {
       
       if(document.querySelector(a.selector)) {
-        console.log(a.keyframes);
         document
           .querySelector(a.selector)
-          .animate(a.keyframes, {duration: 2000, iterations: Infinity})
+          .animate(a.keyframes, {duration: 2000, iterations: Infinity, fill: 'both'})
       }
       
     })
