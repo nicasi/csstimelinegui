@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import KeyFrame from "./KeyFrame";
 
 const Line = (props) => {
@@ -9,15 +9,27 @@ const Line = (props) => {
     const [MouseXStart, setMouseXStart] = useState(0);
     const [MouseButtonDownOnLine, setMouseButtonDownOnLine] = useState(false);
     const [MouseButtonDownOnResizeHandle, setMouseButtonDownOnResizeHandle] = useState(false);
+    const [MouseMoveHandlerAdded, setMouseMoveHandlerAdded] = useState(false);
+
+    useEffect(() => { 
+        if(MouseMoveHandlerAdded) return;
+        
+        if(!MouseButtonDownOnLine && !MouseButtonDownOnResizeHandle) {
+            return;
+        }
+
+        document.addEventListener('mousemove', mouseMoveHandler);
+        document.addEventListener('mouseup', mouseUpHandler);
+
+        setMouseMoveHandlerAdded(true);
+    });
 
     const mouseMoveHandler = (e) => {
         e.stopPropagation();
         
-        if(MouseButtonDownOnLine) {
-            if (e.clientX !== 0) {                
-                let newLeftVal = LeftStart + e.clientX - MouseXStart;
-                setLeft(newLeftVal);
-            }
+        if(MouseButtonDownOnLine) {      
+            let newLeftVal = LeftStart + (e.clientX - MouseXStart);
+            setLeft(newLeftVal);
         }
 
         if(MouseButtonDownOnResizeHandle) {
@@ -36,14 +48,18 @@ const Line = (props) => {
         if (e.target.className=='line') setMouseButtonDownOnLine(true);
         if (e.target.className=='resize-handle') setMouseButtonDownOnResizeHandle(true);
         setMouseXStart(e.clientX);
+        setLeftStart(Left);
         setWidthStart(Width);
     }
 
     const mouseUpHandler = (e) => {
+        document.removeEventListener('mousemove', mouseMoveHandler);
+        setMouseMoveHandlerAdded(false);
+
         setMouseButtonDownOnLine(false);
         setMouseButtonDownOnResizeHandle(false);
-        setMouseXStart(e.clientX);
-        setLeftStart(Left);
+        //setMouseXStart(e.clientX);
+        //setLeftStart(Left);
     }
 
     const onKeyFrameSelectHandler = (cssProps) => {
@@ -60,7 +76,6 @@ const Line = (props) => {
             onMouseDown = { mouseDownHandler }
             onMouseUp = { mouseUpHandler }
             onMouseLeave = { mouseUpHandler }
-            onMouseMove = { mouseMoveHandler }
             onDoubleClick = { dblClickHandler }
             style = {
                 { left: Left + "px", width: Width}

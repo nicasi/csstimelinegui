@@ -4,6 +4,7 @@ import Line from "./Line";
 
 export default function App() {
   const [cssPropsPaneText, setCssPropsPaneText] = useState("...");
+  const [html, setHTML] = useState('<div id="el1"></div>');
 
   let animations = [
     {
@@ -80,9 +81,21 @@ export default function App() {
     })
   };
 
+  const onHTMLChangeHandler = (e) => {
+    let html = e.target.value;
+    setHTML(html);
+  }
+
+  function createMarkup() {
+    return {__html: html};
+  }
+  
+
   return (
     <div className="App">
-      <div id="scene"></div>
+      <div id="scene" dangerouslySetInnerHTML={createMarkup()}>
+      </div>
+      <textarea id="html" onChange={onHTMLChangeHandler}></textarea>
       <div id="timeLine">
         {animations.map((animation) => {
           //console.log(animation);
