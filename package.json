@@ -1,17 +1,14 @@
 {
-  "name": "react",
-  "version": "1.0.0",
-  "description": "React example starter project",
+  "name": "wapigui",
+  "version": "0.0.1",
+  "description": "Web animation api graphical user interface",
   "keywords": [
     "react",
-    "starter"
+    "webanimation api"
   ],
   "main": "src/index.js",
   "dependencies": {
     "assert": "^2.0.0",
-    "fs": "^0.0.1-security",
-    "os": "^0.1.2",
-    "pug": "^3.0.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-scripts": "^5.0.0"
@@ -32,10 +29,5 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ],
-  "browser": {
-    "fs": false,
-    "path": false,
-    "os": false
-  }
+  ]
 }

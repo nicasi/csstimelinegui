@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import KeyFrame from "./KeyFrame";
 
 const Line = (props) => {
-    const [Width, setWidth] = useState(props.duration);
-    const [WidthStart, setWidthStart] = useState(props.duration);
+    const [Width, setWidth] = useState(props.duration * (props.zoom / 100));
+    const [WidthStart, setWidthStart] = useState(props.duration * (props.zoom / 100));
     const [Left, setLeft] = useState(props.delay);
     const [LeftStart, setLeftStart] = useState(props.delay);
     const [MouseXStart, setMouseXStart] = useState(0);
@@ -11,10 +11,10 @@ const Line = (props) => {
     const [MouseButtonDownOnResizeHandle, setMouseButtonDownOnResizeHandle] = useState(false);
     const [MouseMoveHandlerAdded, setMouseMoveHandlerAdded] = useState(false);
 
-    useEffect(() => { 
-        if(MouseMoveHandlerAdded) return;
-        
-        if(!MouseButtonDownOnLine && !MouseButtonDownOnResizeHandle) {
+    useEffect(() => {
+        if (MouseMoveHandlerAdded) return;
+
+        if (!MouseButtonDownOnLine && !MouseButtonDownOnResizeHandle) {
             return;
         }
 
@@ -26,13 +26,13 @@ const Line = (props) => {
 
     const mouseMoveHandler = (e) => {
         e.stopPropagation();
-        
-        if(MouseButtonDownOnLine) {      
+
+        if (MouseButtonDownOnLine) {
             let newLeftVal = LeftStart + (e.clientX - MouseXStart);
             setLeft(newLeftVal);
         }
 
-        if(MouseButtonDownOnResizeHandle) {
+        if (MouseButtonDownOnResizeHandle) {
             console.log('WidthStart ' + WidthStart)
             console.log('change ' + (e.clientX - MouseXStart))
             let newWidthVal = WidthStart + (e.clientX - MouseXStart);
@@ -45,8 +45,8 @@ const Line = (props) => {
     };
 
     const mouseDownHandler = (e) => {
-        if (e.target.className=='line') setMouseButtonDownOnLine(true);
-        if (e.target.className=='resize-handle') setMouseButtonDownOnResizeHandle(true);
+        if (e.target.className == 'line') setMouseButtonDownOnLine(true);
+        if (e.target.className == 'resize-handle') setMouseButtonDownOnResizeHandle(true);
         setMouseXStart(e.clientX);
         setLeftStart(Left);
         setWidthStart(Width);
@@ -71,30 +71,30 @@ const Line = (props) => {
     };
 
     return (
-        <div 
-            className = "line"
-            onMouseDown = { mouseDownHandler }
-            onMouseUp = { mouseUpHandler }
-            onMouseLeave = { mouseUpHandler }
-            onDoubleClick = { dblClickHandler }
-            style = {
-                { left: Left + "px", width: Width}
-            } >
-            <div className = "track" > {
-                props.keyframes.map((keyframe) => {
-                    return ( <
-                        KeyFrame key = { keyframe.key }
-                        id = { keyframe.key }
-                        offset = { keyframe.offset }
-                        cssProps = { keyframe.css }
-                        parentWidth = { Width }
-                        onKeyFrameSelect = { onKeyFrameSelectHandler }
-                        onPositionChange = { onPositionChangeHandler }
-                        />
-                    );
-                })
-            } </div>
-            <div className = "resize-handle" ></div></div>
+        <div className="line"
+            onMouseDown={mouseDownHandler}
+            onMouseUp={mouseUpHandler}
+            onMouseLeave={mouseUpHandler}
+            onDoubleClick={dblClickHandler}
+            style={{ left: Left + "px", width: Width }} >
+            <div className="track">
+                {
+                    props.keyframes.map((keyframe) => {
+                        return (
+                            <KeyFrame key={keyframe.key}
+                                id={keyframe.key}
+                                offset={keyframe.offset}
+                                cssProps={keyframe.css}
+                                parentWidth={Width}
+                                zoom={props.zoom}
+                                onKeyFrameSelect={onKeyFrameSelectHandler}
+                                onPositionChange={onPositionChangeHandler}
+                            />
+                        );
+                    })
+                }
+            </div>
+            <div className="resize-handle" ></div></div>
     );
 };
 
