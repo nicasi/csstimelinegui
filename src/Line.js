@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import KeyFrame from "./KeyFrame";
 
 const Line = (props) => {
-    const [Width, setWidth] = useState(props.duration * (props.zoom / 100));
-    const [WidthStart, setWidthStart] = useState(props.duration * (props.zoom / 100));
+    const [Width, setWidth] = useState(props.duration * props.zoom/100);
+    const [WidthStart, setWidthStart] = useState(props.duration * props.zoom/100);
     const [Left, setLeft] = useState(props.delay);
     const [LeftStart, setLeftStart] = useState(props.delay);
     const [MouseXStart, setMouseXStart] = useState(0);
@@ -12,6 +12,13 @@ const Line = (props) => {
     const [MouseMoveHandlerAdded, setMouseMoveHandlerAdded] = useState(false);
 
     useEffect(() => {
+        if(props.zoomUpdated) {
+            setWidth(props.duration * props.zoom/100);
+            onZoomUpdateHandler();
+        }
+
+        console.log(props.zoomUpdated);
+
         if (MouseMoveHandlerAdded) return;
 
         if (!MouseButtonDownOnLine && !MouseButtonDownOnResizeHandle) {
@@ -33,8 +40,6 @@ const Line = (props) => {
         }
 
         if (MouseButtonDownOnResizeHandle) {
-            console.log('WidthStart ' + WidthStart)
-            console.log('change ' + (e.clientX - MouseXStart))
             let newWidthVal = WidthStart + (e.clientX - MouseXStart);
             setWidth(newWidthVal);
         }
@@ -70,6 +75,10 @@ const Line = (props) => {
         props.onKeyFramePositionChange(props.id, id, offset);
     };
 
+    const onZoomUpdateHandler = () => {
+        props.onZoomUpdateHandler();
+    }
+
     return (
         <div className="line"
             onMouseDown={mouseDownHandler}
@@ -89,6 +98,7 @@ const Line = (props) => {
                                 zoom={props.zoom}
                                 onKeyFrameSelect={onKeyFrameSelectHandler}
                                 onPositionChange={onPositionChangeHandler}
+                                onZoomUpdate={onZoomUpdateHandler}
                             />
                         );
                     })

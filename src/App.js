@@ -5,7 +5,8 @@ import Line from "./Line";
 export default function App() {
     const [cssPropsPaneText, setCssPropsPaneText] = useState("...");
     const [html, setHTML] = useState('<div id="el1"></div>');
-    const [zoom, setZoom] = useState(5);
+    const [zoom, setZoom] = useState(10);
+    const [zoomUpdateFlag, setZoomUpdateFlag] = useState(false);
 
     useEffect(() => {
         applyAnimations();
@@ -96,8 +97,13 @@ export default function App() {
         return { __html: html };
     }
 
-    const onZoomChangeHandler = (e) => {
+    const onZoomInputChangeHandler = (e) => {
+        setZoomUpdateFlag(true);
         setZoom(e.target.value);
+    }
+
+    const removeZoomFlag = () => {
+        setZoomUpdateFlag(false);
     }
 
     return (
@@ -106,7 +112,7 @@ export default function App() {
             </div>
             <textarea id="html" onChange={onHTMLChangeHandler}></textarea>
             <div id="timeLine">
-                <input value={zoom} onChange={onZoomChangeHandler}></input>
+                <input value={zoom} onChange={onZoomInputChangeHandler}></input>
                 {
                     animations.map((animation) => {
                         return (
@@ -115,10 +121,12 @@ export default function App() {
                                 id={animation.key}
                                 onKeyFrameSelect={keyFrameSelectHandler}
                                 onKeyFramePositionChange={keyFramePositionChangeHandler}
+                                onZoomUpdateHandler={removeZoomFlag}
                                 duration={animation.duration}
                                 delay={animation.delay}
                                 keyframes={animation.keyframes}
                                 zoom={zoom}
+                                zoomUpdated={zoomUpdateFlag}
                             />
                         );
                     })
@@ -126,7 +134,7 @@ export default function App() {
             </div>
             <div id="properties-pane">
                 <h2>PROPERTIES</h2>
-                <div contentEditable className="properties">
+                <div className="properties">
                     {cssPropsPaneText}
                 </div>
             </div>
