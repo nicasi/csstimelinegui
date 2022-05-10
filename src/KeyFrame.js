@@ -43,7 +43,6 @@ const KeyFrame = (props) => {
   const dragStopHandler = (e) => {
     setLeftStart(Left);
     props.onPositionChange(props.id, Left/100);
-    console.log(props.id);
   };
 
   const onClickHandler = (e) => {

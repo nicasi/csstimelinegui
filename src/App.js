@@ -5,19 +5,19 @@ import Line from "./Line";
 export default function App() {
     const [cssPropsPaneText, setCssPropsPaneText] = useState("...");
     const [html, setHTML] = useState('<div id="el1"></div>');
-    const [zoom, setZoom] = useState(10);
+    const [zoom, setZoom] = useState(33);
     const [zoomUpdateFlag, setZoomUpdateFlag] = useState(false);
 
     useEffect(() => {
         applyAnimations();
     });
 
-    let animations = [
+    const startAnimations = [
         {
             key: 0,
             selector: "#el1",
-            duration: 5000,
-            delay: 100,
+            duration: 1000,
+            delay: 0,
             keyframes: [
                 {
                     key: "0.0",
@@ -28,21 +28,21 @@ export default function App() {
                 {
                     key: "0.1",
                     offset: 0.5,
-                    backgroundColor: 'green',
-                    transform: 'rotate(180deg)'
+                    backgroundColor: 'orange',
+                    transform: 'rotate(45deg)'
                 },
                 {
                     key: "0.2",
                     offset: 1,
-                    backgroundColor: 'blue',
-                    transform: 'rotate(360deg)'
+                    backgroundColor: 'red',
+                    transform: 'rotate(0deg)'
                 }
             ]
         },
         {
             key: 1,
             selector: "#el2",
-            duration: 3000,
+            duration: 300,
             delay: 0,
             keyframes: [
                 {
@@ -60,6 +60,8 @@ export default function App() {
             ]
         }
     ];
+    
+    const [animations, setAnimations] = useState(startAnimations);
 
     const formatCss = (str) => {
         let arr = str.split(";");
@@ -67,16 +69,14 @@ export default function App() {
     };
 
     const keyFrameSelectHandler = (cssProps) => {
-        console.log(cssProps);
         setCssPropsPaneText(cssProps);
     };
 
     const applyAnimations = () => {
         animations.forEach(a => {
-            if (document.querySelector(a.selector)) {
-                document
-                    .querySelector(a.selector)
-                    .animate(a.keyframes, { duration: a.duration, iterations: Infinity, fill: 'both' })
+            let el = document.querySelector(a.selector);
+            if (el) {
+                el.animate(a.keyframes, { duration: a.duration, iterations: Infinity, fill: 'both' })
             }
         })
     }
@@ -85,8 +85,17 @@ export default function App() {
         let aniToChange = animations.find((ani) => ani.key === id);
         let keyFrameToChange = aniToChange.keyframes.find((kf) => kf.key === kfid);
         keyFrameToChange.offset = offset;
-        console.log(animations);
+        setAnimations(animations);
+        applyAnimations();
     };
+
+    const widthChangeHandler = (id, width) => {
+        let aniToChange = animations.find((ani) => ani.key === id);
+        aniToChange.duration = width * (100/zoom);
+        console.log(animations);
+        applyAnimations();
+        console.log("width change handler in app.js called, duration: " + (width * (100/zoom)))
+    }
 
     const onHTMLChangeHandler = (e) => {
         let html = e.target.value;
@@ -100,6 +109,8 @@ export default function App() {
     const onZoomInputChangeHandler = (e) => {
         setZoomUpdateFlag(true);
         setZoom(e.target.value);
+        console.log("zoom: " + e.target.value);
+        animations.forEach(a => console.log(a.duration))
     }
 
     const removeZoomFlag = () => {
@@ -121,6 +132,7 @@ export default function App() {
                                 id={animation.key}
                                 onKeyFrameSelect={keyFrameSelectHandler}
                                 onKeyFramePositionChange={keyFramePositionChangeHandler}
+                                onWidthChange={widthChangeHandler}
                                 onZoomUpdateHandler={removeZoomFlag}
                                 duration={animation.duration}
                                 delay={animation.delay}

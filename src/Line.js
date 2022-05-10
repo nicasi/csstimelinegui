@@ -17,8 +17,6 @@ const Line = (props) => {
             onZoomUpdateHandler();
         }
 
-        console.log(props.zoomUpdated);
-
         if (MouseMoveHandlerAdded) return;
 
         if (!MouseButtonDownOnLine && !MouseButtonDownOnResizeHandle) {
@@ -42,6 +40,8 @@ const Line = (props) => {
         if (MouseButtonDownOnResizeHandle) {
             let newWidthVal = WidthStart + (e.clientX - MouseXStart);
             setWidth(newWidthVal);
+            console.log("new width value: " + newWidthVal)
+            props.onWidthChange(props.id, newWidthVal);
         }
     };
 
@@ -76,6 +76,7 @@ const Line = (props) => {
     };
 
     const onZoomUpdateHandler = () => {
+        console.log("zoom: " + props.zoom + ", width: " + Width);
         props.onZoomUpdateHandler();
     }
 
