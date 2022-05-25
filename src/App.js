@@ -4,7 +4,7 @@ import Line from "./Line";
 
 export default function App() {
     const [cssPropsPaneText, setCssPropsPaneText] = useState("...");
-    const [html, setHTML] = useState('<div id="el1"></div>');
+    const [html, setHTML] = useState('<div id="el1"></div><div id="el2"></div>');
     const [zoom, setZoom] = useState(33);
     const [zoomUpdateFlag, setZoomUpdateFlag] = useState(false);
 
@@ -29,7 +29,7 @@ export default function App() {
                     key: "0.1",
                     offset: 0.5,
                     backgroundColor: 'orange',
-                    transform: 'rotate(45deg)'
+                    transform: 'rotate(180deg)'
                 },
                 {
                     key: "0.2",
@@ -63,11 +63,6 @@ export default function App() {
     
     const [animations, setAnimations] = useState(startAnimations);
 
-    const formatCss = (str) => {
-        let arr = str.split(";");
-        return arr.join(";\r\n");
-    };
-
     const keyFrameSelectHandler = (cssProps) => {
         setCssPropsPaneText(cssProps);
     };
@@ -89,15 +84,17 @@ export default function App() {
         applyAnimations();
     };
 
+    const AddKeyframeHandler = (key, percentage) => {
+        console.log("add keyframe at " + key + " " + percentage);
+    };
+
     const widthChangeHandler = (id, width) => {
         let aniToChange = animations.find((ani) => ani.key === id);
         aniToChange.duration = width * (100/zoom);
-        console.log(animations);
         applyAnimations();
-        console.log("width change handler in app.js called, duration: " + (width * (100/zoom)))
     }
 
-    const onHTMLChangeHandler = (e) => {
+    const HTMLChangeHandler = (e) => {
         let html = e.target.value;
         setHTML(html);
     }
@@ -106,11 +103,9 @@ export default function App() {
         return { __html: html };
     }
 
-    const onZoomInputChangeHandler = (e) => {
+    const ZoomInputChangeHandler = (e) => {
         setZoomUpdateFlag(true);
         setZoom(e.target.value);
-        console.log("zoom: " + e.target.value);
-        animations.forEach(a => console.log(a.duration))
     }
 
     const removeZoomFlag = () => {
@@ -121,9 +116,9 @@ export default function App() {
         <div className="App">
             <div id="scene" dangerouslySetInnerHTML={createMarkup()}>
             </div>
-            <textarea id="html" onChange={onHTMLChangeHandler}></textarea>
+            <textarea id="html" onChange={HTMLChangeHandler}></textarea>
             <div id="timeLine">
-                <input value={zoom} onChange={onZoomInputChangeHandler}></input>
+                <input value={zoom} onChange={ZoomInputChangeHandler}></input>
                 {
                     animations.map((animation) => {
                         return (
@@ -134,6 +129,7 @@ export default function App() {
                                 onKeyFramePositionChange={keyFramePositionChangeHandler}
                                 onWidthChange={widthChangeHandler}
                                 onZoomUpdateHandler={removeZoomFlag}
+                                onAddKeyframe={AddKeyframeHandler}
                                 duration={animation.duration}
                                 delay={animation.delay}
                                 keyframes={animation.keyframes}

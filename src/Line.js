@@ -40,13 +40,13 @@ const Line = (props) => {
         if (MouseButtonDownOnResizeHandle) {
             let newWidthVal = WidthStart + (e.clientX - MouseXStart);
             setWidth(newWidthVal);
-            console.log("new width value: " + newWidthVal)
             props.onWidthChange(props.id, newWidthVal);
         }
     };
 
     const dblClickHandler = (e) => {
-        console.log(e.clientX - Left - 7);
+        const percentage = (e.clientX - Left - 16) * 100 / (Width-16);
+        props.onAddKeyframe(props.id, percentage);
     };
 
     const mouseDownHandler = (e) => {
@@ -76,12 +76,12 @@ const Line = (props) => {
     };
 
     const onZoomUpdateHandler = () => {
-        console.log("zoom: " + props.zoom + ", width: " + Width);
         props.onZoomUpdateHandler();
     }
 
     return (
         <div className="line"
+            key={props.key}
             onMouseDown={mouseDownHandler}
             onMouseUp={mouseUpHandler}
             onMouseLeave={mouseUpHandler}
@@ -91,7 +91,8 @@ const Line = (props) => {
                 {
                     props.keyframes.map((keyframe) => {
                         return (
-                            <KeyFrame key={keyframe.key}
+                            <KeyFrame
+                                key={keyframe.key}
                                 id={keyframe.key}
                                 offset={keyframe.offset}
                                 cssProps={keyframe.css}
