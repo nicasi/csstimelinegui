@@ -29,6 +29,31 @@
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
+    <div id="container-html" style="width:400px;height:300px;border:1px solid grey"></div>
+    <div id="container-css" style="width:400px;height:300px;border:1px solid grey"></div>
+		<script src="monaco-editor/min/vs/loader.js"></script>
+    <script src="https://unpkg.com/emmet-monaco-es/dist/emmet-monaco.min.js"></script>
+        
+		<script>
+			require.config({ paths: { vs: 'monaco-editor/min/vs' } });
+
+			require(['vs/editor/editor.main'], function () {
+        var editor = monaco.editor.create(document.getElementById('container-html'), {
+          language: 'html',
+          minimap: {enabled: false}
+        });
+                
+        emmetMonaco.emmetHTML(monaco)
+			});
+
+      require(['vs/editor/editor.main'], function () {
+        var editor = monaco.editor.create(document.getElementById('container-css'), {
+          language: 'css'
+        });
+                
+        emmetMonaco.emmetHTML(monaco)
+			});
+    </script>
     <div id="root">
     
     </div>
