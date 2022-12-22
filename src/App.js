@@ -7,6 +7,7 @@ import Line from "./Line";
 export default function App() {
     const [cssPropsPaneText, setCssPropsPaneText] = useState("...");
     const [html, setHTML] = useState('');
+    const [CSS, setCSS] = useState('');
     const [zoom, setZoom] = useState(33);
     const [zoomUpdateFlag, setZoomUpdateFlag] = useState(false);
 
@@ -17,7 +18,7 @@ export default function App() {
     const startAnimations = [
         {
             key: 0,
-            selector: "#el1",
+            selector: ".el1",
             duration: 1000,
             delay: 0,
             keyframes: [
@@ -114,6 +115,14 @@ export default function App() {
         setZoomUpdateFlag(false);
     }
 
+    const handleHTMLEditorChange = (value, event) => {
+        setHTML(value);
+    }
+
+    function handleCSSEditorChange(value, event) {
+        setCSS(value);
+      }
+
     return (
         <div className="App">
             <Editor
@@ -128,8 +137,23 @@ export default function App() {
                 beforeMount={(monaco) => {
                 emmetHTML(monaco);
                 }}
+                onChange={handleHTMLEditorChange}
             />
-            <div id="scene" dangerouslySetInnerHTML={createMarkup()}>
+            <Editor
+                height="300px"
+                defaultLanguage="css"
+                theme="vs-light"
+                options={{
+                    minimap: {
+                        enabled: false
+                    }}
+                }
+                beforeMount={(monaco) => {
+                emmetCSS(monaco);
+                }}
+                onChange={handleCSSEditorChange}
+            />
+            <div id="scene" dangerouslySetInnerHTML={{__html: html}}>
             </div>
             <textarea id="html" onChange={HTMLChangeHandler}></textarea>
             <div id="timeLine">
@@ -161,6 +185,7 @@ export default function App() {
                     {cssPropsPaneText}
                 </div>
             </div>
+            <style>{CSS}</style>
         </div>
     );
 }
