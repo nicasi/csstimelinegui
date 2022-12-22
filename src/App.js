@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+import Editor from "@monaco-editor/react";
+import { emmetHTML, emmetCSS } from "emmet-monaco-es";
 import "./styles.css";
 import Line from "./Line";
 
 export default function App() {
     const [cssPropsPaneText, setCssPropsPaneText] = useState("...");
-    const [html, setHTML] = useState('<div id="el1"></div><div id="el2"></div>');
+    const [html, setHTML] = useState('');
     const [zoom, setZoom] = useState(33);
     const [zoomUpdateFlag, setZoomUpdateFlag] = useState(false);
 
@@ -114,6 +116,19 @@ export default function App() {
 
     return (
         <div className="App">
+            <Editor
+                height="300px"
+                defaultLanguage="html"
+                theme="vs-light"
+                options={{
+                    minimap: {
+                        enabled: false
+                    }}
+                }
+                beforeMount={(monaco) => {
+                emmetHTML(monaco);
+                }}
+            />
             <div id="scene" dangerouslySetInnerHTML={createMarkup()}>
             </div>
             <textarea id="html" onChange={HTMLChangeHandler}></textarea>
