@@ -95,7 +95,7 @@ const Line = (props) => {
                                 key={keyframe.key}
                                 id={keyframe.key}
                                 offset={keyframe.offset}
-                                cssProps={keyframe.css}
+                                cssProps={keyframe}
                                 parentWidth={Width}
                                 zoom={props.zoom}
                                 onKeyFrameSelect={onKeyFrameSelectHandler}

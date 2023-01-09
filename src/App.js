@@ -67,7 +67,21 @@ export default function App() {
     const [animations, setAnimations] = useState(startAnimations);
 
     const keyFrameSelectHandler = (cssProps) => {
-        setCssPropsPaneText(cssProps);
+
+        // translate json to css
+        let cssStr = '';
+
+        Object
+            .entries(cssProps)
+            .filter(el => (el[0] != 'key' && el[0] != 'offset'))
+            .forEach((arr) => {
+                let key = arr[0]
+                let val = arr[1]
+                key = key.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`)
+                cssStr += `${key}: ${val};\n`
+            })
+
+        setCSS(cssStr)
     };
 
     const applyAnimations = () => {
@@ -135,7 +149,7 @@ export default function App() {
                     }}
                 }
                 beforeMount={(monaco) => {
-                emmetHTML(monaco);
+                    emmetHTML(monaco);
                 }}
                 onChange={handleHTMLEditorChange}
             />
@@ -146,12 +160,16 @@ export default function App() {
                 options={{
                     minimap: {
                         enabled: false
-                    }}
-                }
+                    }
+                }}
                 beforeMount={(monaco) => {
-                emmetCSS(monaco);
+                    monaco.languages.css.cssDefaults.setOptions({
+                        validate: false
+                    })
+                    emmetCSS(monaco);
                 }}
                 onChange={handleCSSEditorChange}
+                value={CSS}
             />
             <div id="scene" dangerouslySetInnerHTML={{__html: html}}>
             </div>
