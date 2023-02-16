@@ -1,11 +1,29 @@
+:root {
+    --timeline-height: 100px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.App {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+}
+
+#scene {
+    height: calc(100vh - var(--timeline-height));
+    grid-row: span 2;
+}
+
 #timeLine {
-    position: fixed;
-    bottom: 10px;
-    left: 0;
-    right: 0;
+    grid-column: span 2;
     border-top: 2px solid black;
     display: grid;
     gap: 2px;
+    height: var(--timeline-height);
 }
 
 .App {
@@ -16,7 +34,7 @@
     background-color: rgb(55, 169, 214);
     padding: 0.5em;
     padding-right: 0.5em;
-    min-height: 1em;
+    height: 2em;
     border-radius: 1em;
     color: white;
     position: relative;
@@ -34,7 +52,7 @@
     background-color: rgb(55, 169, 214);
     position: absolute;
     right: -0.5em;
-    z-index: -1;
+    z-index: 10;
     cursor: ew-resize;
 }
 
@@ -48,9 +66,8 @@
     left: 0;
 }
 
-#properties-pane .properties {
-    white-space: pre;
-    font-family: consolas, monospace;
+.emmet-editor {
+    height: calc(50vh - var(--timeline-height)/2);
 }
 
 #el1,

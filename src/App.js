@@ -5,7 +5,6 @@ import "./styles.css";
 import Line from "./Line";
 
 export default function App() {
-    const [cssPropsPaneText, setCssPropsPaneText] = useState("...");
     const [html, setHTML] = useState('');
     const [CSS, setCSS] = useState('');
     const [zoom, setZoom] = useState(33);
@@ -97,6 +96,7 @@ export default function App() {
         let aniToChange = animations.find((ani) => ani.key === id);
         let keyFrameToChange = aniToChange.keyframes.find((kf) => kf.key === kfid);
         keyFrameToChange.offset = offset;
+        aniToChange.keyframes.sort((a, b) => a.offset - b.offset);
         setAnimations(animations);
         applyAnimations();
     };
@@ -109,15 +109,6 @@ export default function App() {
         let aniToChange = animations.find((ani) => ani.key === id);
         aniToChange.duration = width * (100/zoom);
         applyAnimations();
-    }
-
-    const HTMLChangeHandler = (e) => {
-        let html = e.target.value;
-        setHTML(html);
-    }
-
-    function createMarkup() {
-        return { __html: html };
     }
 
     const ZoomInputChangeHandler = (e) => {
@@ -139,8 +130,10 @@ export default function App() {
 
     return (
         <div className="App">
+            <div id="scene" dangerouslySetInnerHTML={{__html: html}}>
+            </div>
             <Editor
-                height="300px"
+                className="emmet-editor html-editor"
                 defaultLanguage="html"
                 theme="vs-light"
                 options={{
@@ -154,7 +147,7 @@ export default function App() {
                 onChange={handleHTMLEditorChange}
             />
             <Editor
-                height="300px"
+                className="emmet-editor css-editor"
                 defaultLanguage="css"
                 theme="vs-light"
                 options={{
@@ -171,9 +164,6 @@ export default function App() {
                 onChange={handleCSSEditorChange}
                 value={CSS}
             />
-            <div id="scene" dangerouslySetInnerHTML={{__html: html}}>
-            </div>
-            <textarea id="html" onChange={HTMLChangeHandler}></textarea>
             <div id="timeLine">
                 <input value={zoom} onChange={ZoomInputChangeHandler}></input>
                 {
@@ -196,12 +186,6 @@ export default function App() {
                         );
                     })
                 }
-            </div>
-            <div id="properties-pane">
-                <h2>PROPERTIES</h2>
-                <div className="properties">
-                    {cssPropsPaneText}
-                </div>
             </div>
             <style>{CSS}</style>
         </div>
